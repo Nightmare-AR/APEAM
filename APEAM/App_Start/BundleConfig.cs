@@ -22,8 +22,7 @@ namespace APEAM
             bundles.Add(new Bundle("~/bundles/bootstrap").Include(
                      "~/Scripts/bootstrap.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
+            bundles.Add(new StyleBundle("~/Content/css").Include(                    
                       "~/Content/site.css"));
         }
     }

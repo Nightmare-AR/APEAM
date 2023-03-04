@@ -16,6 +16,10 @@ namespace APEAM.Entities
         [Display(Name = "RFC")]
         public string RFC { get; set; }
 
+        [Display(Name = "Email")]
+        [Required(ErrorMessage = "El campo '{0}' es requerido."), DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+
         [Display(Name = "Dirección")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
         public string Address { get; set; }

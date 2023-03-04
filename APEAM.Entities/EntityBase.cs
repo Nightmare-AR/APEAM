@@ -11,11 +11,10 @@ namespace APEAM.Entities
     {
         public int ID { get; set; }
 
-        [Display(Name = "Desactivado")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
+        [Display(Name = "Desactivado")]        
         public bool IsDisabled { get; set; }
 
-        [Display(Name = "Fecha deRegistro")]
+        [Display(Name = "Fecha de Registro")]
         public DateTime TimeStamp { get; set; }
 
         [Display(Name = "Fecha ultima actualización")]

@@ -9,6 +9,8 @@ using System.Web;
 using System.Web.Mvc;
 using APEAM.DataAccess;
 using APEAM.Entities;
+using APEAM.Logic;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace APEAM.Controllers
 {
@@ -16,10 +18,25 @@ namespace APEAM.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        private ProductManager _productManager;
+
+        private ProductManager ProductManager
+        {
+            get
+            {
+                return _productManager ?? new ProductManager(HttpContext.GetOwinContext().Get<ApplicationDbContext>());
+            }
+            set
+            {
+                _productManager = value;
+            }
+        }
+
         // GET: Products
         public async Task<ActionResult> Index()
         {
-            return View(await db.Products.ToListAsync());
+            var products = await Task.Run(() => ProductManager.GetAll(null));
+            return View(products);
         }
 
         // GET: Products/Details/5
@@ -29,7 +46,7 @@ namespace APEAM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = await db.Products.FindAsync(id);
+            Product product = await Task.Run(() => ProductManager.Get(id.Value));
             if (product == null)
             {
                 return HttpNotFound();
@@ -48,13 +65,18 @@ namespace APEAM.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,Name,Description,Price,IsDisabled,TimeStamp,Uptime")] Product product)
+        public async Task<ActionResult> Create([Bind(Include = "ID,Name,Description,Price")] Product product)
         {
             if (ModelState.IsValid)
             {
-                db.Products.Add(product);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                product.TimeStamp = DateTime.Now;
+
+                var args = await Task.Run(() => ProductManager.Save(product));
+
+                if (args.Success)
+                    return RedirectToAction("Index");
+                else
+                    ModelState.AddModelError("", args.Message);
             }
 
             return View(product);
@@ -67,7 +89,7 @@ namespace APEAM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = await db.Products.FindAsync(id);
+            Product product = await Task.Run(() => ProductManager.Get(id.Value));
             if (product == null)
             {
                 return HttpNotFound();
@@ -80,13 +102,22 @@ namespace APEAM.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,Name,Description,Price,IsDisabled,TimeStamp,Uptime")] Product product)
-        {
+        public async Task<ActionResult> Edit([Bind(Include = "ID,Name,Description,Price")] Product product)
+        {           
             if (ModelState.IsValid)
             {
-                db.Entry(product).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                var productDb = await Task.Run(() => ProductManager.Get(product.ID));
+                    productDb.Name = product.Name;
+                    productDb.Description = product.Description;
+                    productDb.Price = product.Price;
+                    productDb.Uptime = DateTime.Now;
+
+                var args = await Task.Run(() => ProductManager.Save(productDb));
+
+                if (args.Success)
+                    return RedirectToAction("Index");
+                else
+                    ModelState.AddModelError("", args.Message);
             }
             return View(product);
         }
@@ -111,19 +142,19 @@ namespace APEAM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Product product = await db.Products.FindAsync(id);
-            db.Products.Remove(product);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            Product product = await Task.Run(() => ProductManager.Get(id));
+            if(product != null)
             {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+                var args = await Task.Run(() => ProductManager.DeleteByID(id));
+
+                if (args.Success)
+                    return RedirectToAction("Index");
+
+            }            
+
+            return RedirectToAction("Delete", new { id });
         }
+   
     }
 }

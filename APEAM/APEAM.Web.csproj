@@ -309,6 +309,14 @@
       <Project>{1DF95E9B-A61C-4FD8-A6CA-4587925CA62D}</Project>
       <Name>APEAM.Entities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\APEAM.Helpers\APEAM.Helpers.csproj">
+      <Project>{0CA43A50-F986-4A25-A8F3-6B22647BD3BB}</Project>
+      <Name>APEAM.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\APEAM.Logic\APEAM.Logic.csproj">
+      <Project>{E1E404D2-B489-4EC2-8CFC-3C39BE3FE90A}</Project>
+      <Name>APEAM.Logic</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

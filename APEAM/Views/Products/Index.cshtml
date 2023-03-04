@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<APEAM.Entities.Product>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Productos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Crear nuevo", "Create")
 </p>
 <table class="table">
     <tr>
@@ -20,16 +20,7 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Price)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsDisabled)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TimeStamp)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Uptime)
-        </th>
+        </th>            
         <th></th>
     </tr>
 
@@ -43,20 +34,11 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Price)
-        </td>
+        </td>  
         <td>
-            @Html.DisplayFor(modelItem => item.IsDisabled)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TimeStamp)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Uptime)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            @Html.ActionLink("Editar", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Mas", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Borrar", "Delete", new { id=item.ID })
         </td>
     </tr>
 }

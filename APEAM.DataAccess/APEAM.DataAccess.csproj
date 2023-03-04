@@ -87,6 +87,10 @@
     <Compile Include="Migrations\202303041609537_EnitiesTables.designer.cs">
       <DependentUpon>202303041609537_EnitiesTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202303041706102_CustomerEmail.cs" />
+    <Compile Include="Migrations\202303041706102_CustomerEmail.designer.cs">
+      <DependentUpon>202303041706102_CustomerEmail.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -106,6 +110,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202303041609537_EnitiesTables.resx">
       <DependentUpon>202303041609537_EnitiesTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202303041706102_CustomerEmail.resx">
+      <DependentUpon>202303041706102_CustomerEmail.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

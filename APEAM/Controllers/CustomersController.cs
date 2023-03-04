@@ -9,17 +9,32 @@ using System.Web;
 using System.Web.Mvc;
 using APEAM.DataAccess;
 using APEAM.Entities;
+using APEAM.Logic;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace APEAM.Controllers
 {
     public class CustomersController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private CustomerManager _customerManager;
+
+        private CustomerManager CustomerManager
+        {
+            get
+            {
+                return _customerManager ?? new CustomerManager(HttpContext.GetOwinContext().Get<ApplicationDbContext>());
+            }
+            set
+            {
+                _customerManager = value;
+            }
+        }
 
         // GET: Customers
         public async Task<ActionResult> Index()
         {
-            return View(await db.Customers.ToListAsync());
+            var customers = await Task.Run(() => CustomerManager.GetAll(null));
+            return View(customers);
         }
 
         // GET: Customers/Details/5
@@ -29,7 +44,7 @@ namespace APEAM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Customer customer = await db.Customers.FindAsync(id);
+            Customer customer = await Task.Run(() => CustomerManager.Get(id.Value));
             if (customer == null)
             {
                 return HttpNotFound();
@@ -48,15 +63,20 @@ namespace APEAM.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,Name,RFC,Address,ZipCode,City,State,Country,Phone,IsDisabled,TimeStamp,Uptime")] Customer customer)
+        public async Task<ActionResult> Create([Bind(Include = "ID,Name,RFC,Email,Address,ZipCode,City,State,Country,Phone")] Customer customer)
         {
             if (ModelState.IsValid)
             {
-                db.Customers.Add(customer);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
+                customer.TimeStamp = DateTime.Now;
 
+                var args = await Task.Run(() => CustomerManager.Save(customer));
+
+                if(args.Success)             
+                    return RedirectToAction("Index");
+                else
+                    ModelState.AddModelError("", args.Message);
+            }
+            
             return View(customer);
         }
 
@@ -67,7 +87,7 @@ namespace APEAM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Customer customer = await db.Customers.FindAsync(id);
+            Customer customer = await Task.Run(() => CustomerManager.Get(id.Value));
             if (customer == null)
             {
                 return HttpNotFound();
@@ -80,13 +100,28 @@ namespace APEAM.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,Name,RFC,Address,ZipCode,City,State,Country,Phone,IsDisabled,TimeStamp,Uptime")] Customer customer)
-        {
+        public async Task<ActionResult> Edit([Bind(Include = "ID,Name,RFC,Email,Address,ZipCode,City,State,Country,Phone")] Customer customer)
+        {            
             if (ModelState.IsValid)
             {
-                db.Entry(customer).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                var customerDb = await Task.Run(() => CustomerManager.Get(customer.ID));
+                    customerDb.Name = customer.Name;
+                    customerDb.RFC = customer.RFC;
+                    customerDb.Email = customer.Email;
+                    customerDb.Address = customer.Address;
+                    customerDb.ZipCode = customer.ZipCode;                
+                    customerDb.City = customer.City;                
+                    customerDb.State = customer.State;                
+                    customerDb.Country = customer.Country;
+                    customerDb.Phone = customer.Phone;                    
+                    customerDb.Uptime = DateTime.Now;
+
+                var args = await Task.Run(() => CustomerManager.Save(customerDb));
+
+                if(args.Success)                
+                    return RedirectToAction("Index");
+                else
+                    ModelState.AddModelError("", args.Message);
             }
             return View(customer);
         }
@@ -98,7 +133,7 @@ namespace APEAM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Customer customer = await db.Customers.FindAsync(id);
+            Customer customer = await Task.Run(() => CustomerManager.Get(id.Value));
             if (customer == null)
             {
                 return HttpNotFound();
@@ -111,19 +146,18 @@ namespace APEAM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Customer customer = await db.Customers.FindAsync(id);
-            db.Customers.Remove(customer);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            Customer customer = await Task.Run(() => CustomerManager.Get(id));
+            
+            if(customer != null)
+            {
+                var args = await Task.Run(() => CustomerManager.DeleteByID(id));
+
+                if(args.Success)
+                    return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Delete", new { id });
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }
