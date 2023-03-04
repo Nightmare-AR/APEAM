@@ -1,5 +1,6 @@
 ﻿using APEAM.Entities;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 
 namespace APEAM.DataAccess
 {    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -14,5 +15,14 @@ namespace APEAM.DataAccess
             return new ApplicationDbContext();
         }
 
+        public DbSet<Customer> Customers { get; set; }
+
+        public DbSet<Product> Products { get; set; }
+
+        public DbSet<Sale> Sales { get; set; }
+
+        public DbSet<ItemList> ItemLists { get; set; }
+
+        public DbSet<Payment> Payments { get; set; }
     }
 }

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APEAM.DataAccess", "APEAM.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APEAM.Logic", "APEAM.Logic\APEAM.Logic.csproj", "{E1E404D2-B489-4EC2-8CFC-3C39BE3FE90A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APEAM.Helpers", "APEAM.Helpers\APEAM.Helpers.csproj", "{0CA43A50-F986-4A25-A8F3-6B22647BD3BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{E1E404D2-B489-4EC2-8CFC-3C39BE3FE90A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1E404D2-B489-4EC2-8CFC-3C39BE3FE90A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1E404D2-B489-4EC2-8CFC-3C39BE3FE90A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CA43A50-F986-4A25-A8F3-6B22647BD3BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CA43A50-F986-4A25-A8F3-6B22647BD3BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CA43A50-F986-4A25-A8F3-6B22647BD3BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CA43A50-F986-4A25-A8F3-6B22647BD3BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
