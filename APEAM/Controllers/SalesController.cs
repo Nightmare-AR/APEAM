@@ -9,18 +9,59 @@ using System.Web;
 using System.Web.Mvc;
 using APEAM.DataAccess;
 using APEAM.Entities;
+using APEAM.Logic;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace APEAM.Controllers
 {
     public class SalesController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private int _iva = 16;
+        private SaleManager _saleManager;
+        private CustomerManager _customerManager;
+        private ProductManager _productManager;
+
+        private ProductManager ProductManager
+        {
+            get
+            {
+                return _productManager ?? new ProductManager(HttpContext.GetOwinContext().Get<ApplicationDbContext>());
+            }
+            set
+            {
+                _productManager = value;
+            }
+        }
+
+        private CustomerManager CustomerManager
+        {
+            get
+            {
+                return _customerManager ?? new CustomerManager(HttpContext.GetOwinContext().Get<ApplicationDbContext>());
+            }
+            set
+            {
+                _customerManager = value;
+            }
+        }
+
+        private SaleManager SaleManager
+        {
+            get
+            {
+                return _saleManager ?? new SaleManager(HttpContext.GetOwinContext().Get<ApplicationDbContext>());
+            }
+            set
+            {
+                _saleManager = value;
+            }
+        }
 
         // GET: Sales
         public async Task<ActionResult> Index()
         {
-            var sales = db.Sales.Include(s => s.Customer);
-            return View(await sales.ToListAsync());
+            var sales = await Task.Run(() => SaleManager.GetAll(null));
+            return View(sales);
         }
 
         // GET: Sales/Details/5
@@ -30,7 +71,7 @@ namespace APEAM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Sale sale = await db.Sales.FindAsync(id);
+            Sale sale = await Task.Run(() => SaleManager.Get(id.Value));
             if (sale == null)
             {
                 return HttpNotFound();
@@ -39,10 +80,16 @@ namespace APEAM.Controllers
         }
 
         // GET: Sales/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            ViewBag.CustomerId = new SelectList(db.Customers, "ID", "Name");
-            return View();
+            var customers = CustomerManager.GetAll(null);
+            ViewBag.CustomerId = new SelectList(customers, "ID", "Name");
+
+            Sale sale = new Sale();
+            sale.IVA = _iva;
+            sale.SaleDate = DateTime.Now;
+            ViewData["Products"] = await Task.Run(() => ProductManager.GetAll(null));
+            return View(sale);
         }
 
         // POST: Sales/Create
@@ -50,16 +97,22 @@ namespace APEAM.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,Folio,BrutePrice,IVA,SaleDate,IsPayed,CustomerId,IsDisabled,TimeStamp,Uptime")] Sale sale)
+        public async Task<ActionResult> Create([Bind(Include = "ID,Folio,IVA,SaleDate,CustomerId,ItemLists")] Sale sale)
         {
             if (ModelState.IsValid)
             {
-                db.Sales.Add(sale);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
+                sale.TimeStamp = DateTime.Now;
 
-            ViewBag.CustomerId = new SelectList(db.Customers, "ID", "Name", sale.CustomerId);
+                var args = await Task.Run(() => SaleManager.Save(sale));
+
+                if (args.Success)
+                    return RedirectToAction("Index");
+                else
+                    ModelState.AddModelError("", args.Message);
+            }
+            var customers = CustomerManager.GetAll(null);
+            ViewBag.CustomerId = new SelectList(customers, "ID", "Name", sale.CustomerId);
+            ViewData["Products"] = await Task.Run(() => ProductManager.GetAll(null));
             return View(sale);
         }
 
@@ -70,12 +123,15 @@ namespace APEAM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Sale sale = await db.Sales.FindAsync(id);
+            Sale sale = await Task.Run(() => SaleManager.Get(id.Value));
             if (sale == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CustomerId = new SelectList(db.Customers, "ID", "Name", sale.CustomerId);
+
+            var customers = CustomerManager.GetAll(null);
+            ViewBag.CustomerId = new SelectList(customers, "ID", "Name", sale.CustomerId);
+            ViewData["Products"] = await Task.Run(() => ProductManager.GetAll(null));
             return View(sale);
         }
 
@@ -84,15 +140,27 @@ namespace APEAM.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,Folio,BrutePrice,IVA,SaleDate,IsPayed,CustomerId,IsDisabled,TimeStamp,Uptime")] Sale sale)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,Folio,IVA,SaleDate,CustomerId,ItemLists")] Sale sale)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(sale).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                Sale saleDb = await Task.Run(() => SaleManager.Get(sale.ID));
+                saleDb.Folio = sale.Folio;
+                saleDb.IVA = sale.IVA;
+                saleDb.CustomerId = sale.CustomerId;
+                saleDb.SaleDate = sale.SaleDate;
+                saleDb.Uptime = DateTime.Now;
+
+                var args = await Task.Run(() => SaleManager.Save(saleDb));
+
+                if (args.Success)
+                    return RedirectToAction("Index");
+                else
+                    ModelState.AddModelError("", args.Message);
             }
-            ViewBag.CustomerId = new SelectList(db.Customers, "ID", "Name", sale.CustomerId);
+            var customers = CustomerManager.GetAll(null);
+            ViewBag.CustomerId = new SelectList(customers, "ID", "Name", sale.CustomerId);
+            ViewData["Products"] = await Task.Run(() => ProductManager.GetAll(null));
             return View(sale);
         }
 
@@ -103,7 +171,7 @@ namespace APEAM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Sale sale = await db.Sales.FindAsync(id);
+            Sale sale = await Task.Run(() => SaleManager.Get(id.Value));
             if (sale == null)
             {
                 return HttpNotFound();
@@ -116,19 +184,17 @@ namespace APEAM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Sale sale = await db.Sales.FindAsync(id);
-            db.Sales.Remove(sale);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            Sale sale = await Task.Run(() => SaleManager.Get(id));
+            if (sale != null)
             {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+                var args = await Task.Run(() => SaleManager.DeleteByID(id));
+
+                if (args.Success)
+                    return RedirectToAction("Index");
+
+            };
+
+            return RedirectToAction("Delete", new { id });
+        }    
     }
 }

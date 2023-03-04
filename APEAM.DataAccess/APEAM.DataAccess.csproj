@@ -91,6 +91,14 @@
     <Compile Include="Migrations\202303041706102_CustomerEmail.designer.cs">
       <DependentUpon>202303041706102_CustomerEmail.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202303041859274_FixBrutePrice.cs" />
+    <Compile Include="Migrations\202303041859274_FixBrutePrice.designer.cs">
+      <DependentUpon>202303041859274_FixBrutePrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202303042159448_ItemListName.cs" />
+    <Compile Include="Migrations\202303042159448_ItemListName.designer.cs">
+      <DependentUpon>202303042159448_ItemListName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -113,6 +121,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202303041706102_CustomerEmail.resx">
       <DependentUpon>202303041706102_CustomerEmail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202303041859274_FixBrutePrice.resx">
+      <DependentUpon>202303041859274_FixBrutePrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202303042159448_ItemListName.resx">
+      <DependentUpon>202303042159448_ItemListName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

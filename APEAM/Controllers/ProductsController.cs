@@ -16,8 +16,6 @@ namespace APEAM.Controllers
 {
     public class ProductsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
         private ProductManager _productManager;
 
         private ProductManager ProductManager
@@ -129,7 +127,7 @@ namespace APEAM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = await db.Products.FindAsync(id);
+            Product product = await Task.Run(() => ProductManager.Get(id.Value));
             if (product == null)
             {
                 return HttpNotFound();

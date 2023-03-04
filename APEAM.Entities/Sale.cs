@@ -34,16 +34,22 @@ namespace APEAM.Entities
         }
 
         [Display(Name = "Precio bruto")]
-        public double BrutePrice { get; set; }
+        public double BrutePrice { 
+            get {
+                var price = ItemLists.Sum(it => it.TotalPrice);
 
-        [Display(Name = "Precio bruto")]
+                return price;
+            }
+        }
+
+        [Display(Name = "IVA")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
         public float IVA { get; set; }
 
         [Display(Name = "Fecha de venta")]
         public DateTime SaleDate { get; set; }
 
-        [Display(Name = "Esta Pagada?")]
+        [Display(Name = "Pagada")]
         public bool IsPayed { get; set; }
 
         [Display(Name = "ID del Cliente")]

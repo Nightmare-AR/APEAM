@@ -1,19 +1,20 @@
 ﻿@model APEAM.Entities.Sale
+@using APEAM.Entities
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Crear";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create</h2>
+<h2>@ViewBag.Title</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Sale</h4>
+        <h4>Venta</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -25,85 +26,125 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.BrutePrice, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.BrutePrice, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.BrutePrice, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.IVA, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.IVA, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.IVA, new { htmlAttributes = new { @class = "form-control", @disabled = "" } })
                 @Html.ValidationMessageFor(model => model.IVA, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.IVA)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.SaleDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.SaleDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.SaleDate, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
                 @Html.ValidationMessageFor(model => model.SaleDate, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IsPayed, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsPayed)
-                    @Html.ValidationMessageFor(model => model.IsPayed, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CustomerId, "CustomerId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.CustomerId, "Selecciona el cliente", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("CustomerId", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CustomerId, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsDisabled, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsDisabled)
-                    @Html.ValidationMessageFor(model => model.IsDisabled, "", new { @class = "text-danger" })
-                </div>
-            </div>
+        <br />
+
+        <div class="container-fluid">
+            <h4>Lista de Articulos</h4>
+
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">
+                Agregar productos
+            </button>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.TimeStamp, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TimeStamp, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TimeStamp, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Uptime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Uptime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Uptime, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">@Html.DisplayNameFor(modle => Model.ItemLists.FirstOrDefault().Name)</th>
+                    <th scope="col">@Html.DisplayNameFor(modle => Model.ItemLists.FirstOrDefault().Price)</th>
+                    <th scope="col">@Html.DisplayNameFor(modle => Model.ItemLists.FirstOrDefault().Quantity)</th>
+                    <th scope="col">@Html.DisplayNameFor(modle => Model.ItemLists.FirstOrDefault().TotalPrice)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="articlesBody">
+                @for (var index = 0; index < Model.ItemLists.Count(); index++)
+                {
+                    <tr data-id="@Model.ItemLists.ElementAt(index).ProductId" class="articleRow">
+                        <td scope="row">@Html.DisplayFor(model => model.ItemLists.ElementAt(index).Name)</td>
+                        <td class="priceSelector">@Html.DisplayFor(model => model.ItemLists.ElementAt(index).Price)</td>
+                        <td class="quantitySelector">
+                            <input type='number' @Html.NameFor(model => model.ItemLists.ElementAt(index).Quantity) data-id='@index' class='form-control quantityText' value='@Model.ItemLists.ElementAt(index).Quantity' />
+                        </td>
+                        <td class="totalPriceSelector">@Html.DisplayFor(model => model.ItemLists.ElementAt(index).TotalPrice)</td>
+                        <td>
+                            <p>
+                                <a href="javascript:void(0)" class="deleteRow">Eliminar</a>
+                            </p>
+                        </td>
+                        @Html.HiddenFor(model => model.ItemLists.ElementAt(index).ID);
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p><strong>Precio Total:</strong> <span id="pricing">@Html.DisplayFor(model => model.BrutePrice)</span></p>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Crear" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-lg" id="productModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Productos</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Seleccionar</th>
+                                <th scope="col">@Html.DisplayFor(model => model.ItemLists.FirstOrDefault().Product.Name)</th>
+                                <th scope="col">@Html.DisplayFor(model => model.ItemLists.FirstOrDefault().Product.Price)</th>                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in ViewData["Products"] as List<Product>)
+                            {
+                                <tr>
+                                    <th scope="row">
+                                        <div class="form-check">
+                                            <input class="form-check-input checked-product" data-id="@product.ID" data-name="@product.Name" data-price="@product.Price" type="checkbox" value="">                                       
+                                        </div>
+                                    </th>
+                                    <td>@Html.DisplayFor(model => product.Name)</td>
+                                    <td>@Html.DisplayFor(model => product.Price)</td>                                    
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button id="addProductButton" type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+                </div>
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Regresar a la lista", "Index")
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="~/Scripts/Site/Sales.js"></script>
 }

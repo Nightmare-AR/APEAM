@@ -15,7 +15,7 @@ namespace APEAM.Entities
 
         [Display(Name = "Descripcion del producto")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string Descripción { get; set; }
+        public string Description { get; set; }
 
         [Display(Name = "Precio del producto")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
