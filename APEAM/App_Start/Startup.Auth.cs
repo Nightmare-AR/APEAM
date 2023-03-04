@@ -5,7 +5,8 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
-using APEAM.Models;
+using APEAM.DataAccess;
+using APEAM.Entities;
 
 namespace APEAM
 {

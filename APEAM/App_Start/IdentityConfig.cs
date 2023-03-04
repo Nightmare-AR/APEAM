@@ -11,6 +11,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using APEAM.Models;
+using APEAM.Entities;
+using APEAM.DataAccess;
 
 namespace APEAM
 {

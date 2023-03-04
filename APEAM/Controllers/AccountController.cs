@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using APEAM.Models;
+using APEAM.Entities;
 
 namespace APEAM.Controllers
 {
