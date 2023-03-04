@@ -16,7 +16,9 @@
     <div class="form-horizontal">
         <h4>Venta</h4>
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.ID)
         <div class="form-group">
             @Html.LabelFor(model => model.Folio, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -77,7 +79,7 @@
                         <td scope="row">@Html.DisplayFor(model => model.ItemLists.ElementAt(index).Name)</td>
                         <td class="priceSelector">@Html.DisplayFor(model => model.ItemLists.ElementAt(index).Price)</td>
                         <td class="quantitySelector">
-                            <input type='number' @Html.NameFor(model => model.ItemLists.ElementAt(index).Quantity) data-id='@index' class='form-control quantityText' value='@Model.ItemLists.ElementAt(index).Quantity' />
+                            <input type='number' name="@Html.NameFor(model => model.ItemLists[index].Quantity)" data-id='@index' class='form-control quantityText' value='@Model.ItemLists.ElementAt(index).Quantity' />
                         </td>
                         <td class="totalPriceSelector">@Html.DisplayFor(model => model.ItemLists.ElementAt(index).TotalPrice)</td>
                         <td>
@@ -85,7 +87,11 @@
                                 <a href="javascript:void(0)" class="deleteRow">Eliminar</a>
                             </p>
                         </td>
-                        @Html.HiddenFor(model => model.ItemLists.ElementAt(index).ID);
+                        @Html.HiddenFor(model => model.ItemLists[index].ProductId);
+                        @Html.HiddenFor(model => model.ItemLists[index].Name);
+                        @Html.HiddenFor(model => model.ItemLists[index].Description);
+                        @Html.HiddenFor(model => model.ItemLists[index].Price);
+                        @Html.HiddenFor(model => model.ItemLists[index].SaleId);
                     </tr>
                 }
             </tbody>
@@ -120,7 +126,7 @@
                                 <tr>
                                     <th scope="row">
                                         <div class="form-check">
-                                            <input class="form-check-input checked-product" data-id="@product.ID" data-name="@product.Name" data-price="@product.Price" type="checkbox" value="">                                       
+                                            <input class="form-check-input checked-product" data-id="@product.ID" data-name="@product.Name" data-price="@product.Price" data-description="@product.Description" type="checkbox" value="">                                       
                                         </div>
                                     </th>
                                     <td>@Html.DisplayFor(model => product.Name)</td>

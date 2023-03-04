@@ -54,7 +54,7 @@ namespace APEAM.Controllers
 
         // GET: Customers/Create
         public ActionResult Create()
-        {
+        {            
             return View();
         }
 
@@ -63,7 +63,7 @@ namespace APEAM.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,Name,RFC,Email,Address,ZipCode,City,State,Country,Phone")] Customer customer)
+        public async Task<ActionResult> Create([Bind(Include = "ID,Name,RFC,Email,Address,ZipCode,City,State,Country,Phone,PaymentMethod")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -100,10 +100,11 @@ namespace APEAM.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,Name,RFC,Email,Address,ZipCode,City,State,Country,Phone")] Customer customer)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,Name,RFC,Email,Address,ZipCode,City,State,Country,Phone,PaymentMethod")] Customer customer)
         {            
             if (ModelState.IsValid)
             {
+
                 var customerDb = await Task.Run(() => CustomerManager.Get(customer.ID));
                     customerDb.Name = customer.Name;
                     customerDb.RFC = customer.RFC;
@@ -115,6 +116,7 @@ namespace APEAM.Controllers
                     customerDb.Country = customer.Country;
                     customerDb.Phone = customer.Phone;                    
                     customerDb.Uptime = DateTime.Now;
+                    customerDb.PaymentMethod = customer.PaymentMethod;
 
                 var args = await Task.Run(() => CustomerManager.Save(customerDb));
 

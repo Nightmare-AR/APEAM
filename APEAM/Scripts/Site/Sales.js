@@ -16,7 +16,7 @@
                     "<input type='hidden' name='ItemLists[" + i + "].Name' value='" + $(this).data("name") + "'/>" +
                     "<input type='hidden' name='ItemLists[" + i + "].Price' value='" + $(this).data("price") + "'/>" +
                     "<input type='hidden' name='ItemLists[" + i + "].Description' value='" + $(this).data("description") + "'/>" +
-                    "<input type='hidden' name='ItemLists[" + i + "].SaleId' value='" + $("#ID") + "'/>" +
+                    "<input type='hidden' name='ItemLists[" + i + "].SaleId' value='" + $("#ID").val() + "'/>" +
                     "</tr> ";
                    
 

@@ -22,7 +22,5 @@ namespace APEAM.DataAccess
         public DbSet<Sale> Sales { get; set; }
 
         public DbSet<ItemList> ItemLists { get; set; }
-
-        public DbSet<Payment> Payments { get; set; }
     }
 }

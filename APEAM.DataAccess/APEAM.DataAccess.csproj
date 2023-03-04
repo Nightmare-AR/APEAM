@@ -99,6 +99,18 @@
     <Compile Include="Migrations\202303042159448_ItemListName.designer.cs">
       <DependentUpon>202303042159448_ItemListName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202303042306486_CustomerPaymentMethod.cs" />
+    <Compile Include="Migrations\202303042306486_CustomerPaymentMethod.designer.cs">
+      <DependentUpon>202303042306486_CustomerPaymentMethod.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202303042316553_CustomerFix.cs" />
+    <Compile Include="Migrations\202303042316553_CustomerFix.designer.cs">
+      <DependentUpon>202303042316553_CustomerFix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202303042317439_RemovePayment.cs" />
+    <Compile Include="Migrations\202303042317439_RemovePayment.designer.cs">
+      <DependentUpon>202303042317439_RemovePayment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -127,6 +139,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202303042159448_ItemListName.resx">
       <DependentUpon>202303042159448_ItemListName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202303042306486_CustomerPaymentMethod.resx">
+      <DependentUpon>202303042306486_CustomerPaymentMethod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202303042316553_CustomerFix.resx">
+      <DependentUpon>202303042316553_CustomerFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202303042317439_RemovePayment.resx">
+      <DependentUpon>202303042317439_RemovePayment.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

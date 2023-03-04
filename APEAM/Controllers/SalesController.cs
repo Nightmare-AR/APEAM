@@ -20,6 +20,19 @@ namespace APEAM.Controllers
         private SaleManager _saleManager;
         private CustomerManager _customerManager;
         private ProductManager _productManager;
+        private ItemListManager _itemListManager;
+
+        private ItemListManager ItemListManager
+        {
+            get
+            {
+                return _itemListManager ?? new ItemListManager(HttpContext.GetOwinContext().Get<ApplicationDbContext>());
+            }
+            set
+            {
+                _itemListManager = value;
+            }
+        }
 
         private ProductManager ProductManager
         {
@@ -99,9 +112,14 @@ namespace APEAM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "ID,Folio,IVA,SaleDate,CustomerId,ItemLists")] Sale sale)
         {
+            var now = DateTime.Now;
             if (ModelState.IsValid)
             {
-                sale.TimeStamp = DateTime.Now;
+                sale.TimeStamp = now;
+                foreach(var item in sale.ItemLists)
+                {
+                    item.TimeStamp = now;
+                }
 
                 var args = await Task.Run(() => SaleManager.Save(sale));
 
@@ -142,14 +160,38 @@ namespace APEAM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "ID,Folio,IVA,SaleDate,CustomerId,ItemLists")] Sale sale)
         {
+            var now = DateTime.Now;
+
             if (ModelState.IsValid)
-            {
+            {                
+
                 Sale saleDb = await Task.Run(() => SaleManager.Get(sale.ID));
+
+                foreach(var item in saleDb.ItemLists.Reverse<ItemList>())
+                {
+                    if (sale.ItemLists.Where(il => il.ID == item.ID).Count() == 0)
+                        ItemListManager.Delete(item.ID);
+
+                }
+
+                foreach (var item in sale.ItemLists)
+                {
+                    if (saleDb.ItemLists.Where(il => il.ID == item.ID).Count() == 0)
+                        saleDb.ItemLists.Add(item);
+
+                }
+
                 saleDb.Folio = sale.Folio;
                 saleDb.IVA = sale.IVA;
                 saleDb.CustomerId = sale.CustomerId;
                 saleDb.SaleDate = sale.SaleDate;
-                saleDb.Uptime = DateTime.Now;
+                saleDb.Uptime = now;              
+
+                foreach (var item in saleDb.ItemLists)
+                {
+                    if(item.ID == 0)
+                        item.TimeStamp = now;
+                }
 
                 var args = await Task.Run(() => SaleManager.Save(saleDb));
 

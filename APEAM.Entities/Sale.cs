@@ -48,10 +48,7 @@ namespace APEAM.Entities
 
         [Display(Name = "Fecha de venta")]
         public DateTime SaleDate { get; set; }
-
-        [Display(Name = "Pagada")]
-        public bool IsPayed { get; set; }
-
+ 
         [Display(Name = "ID del Cliente")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
         public int CustomerId { get; set; }
@@ -60,6 +57,6 @@ namespace APEAM.Entities
         public virtual Customer Customer { get; set; }
 
         [Display(Name = "Lista de productos")]
-        public virtual IEnumerable<ItemList> ItemLists { get; set; } 
+        public virtual List<ItemList> ItemLists { get; set; } 
     }
 }

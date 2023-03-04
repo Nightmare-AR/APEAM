@@ -44,8 +44,19 @@ namespace APEAM.Entities
         [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; }
 
+        [Display(Name = "Metodo de pago")]
+        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
+        public PaymentMethod PaymentMethod { get; set; }
+
         [Display(Name = "Lista de ventas")]
         public virtual IEnumerable<Sale> Sales { get; set; }
 
+    }
+
+    public enum PaymentMethod
+    {
+        Card = 0,
+        Transfer,
+        Cash
     }
 }

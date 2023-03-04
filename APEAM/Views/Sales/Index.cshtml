@@ -26,10 +26,7 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.SaleDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsPayed)
-        </th>        
+        </th>           
         <th>
             @Html.DisplayNameFor(model => model.TimeStamp)
         </th>  
@@ -51,11 +48,8 @@
             @Html.DisplayFor(modelItem => item.IVA)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.SaleDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsPayed)
-        </td>  
+            @item.SaleDate.ToShortDateString()
+        </td>        
         <td>
             @Html.DisplayFor(modelItem => item.TimeStamp)
         </td>       
