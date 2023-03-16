@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace APEAM.Logic
 {
-    public class SaleManager
+    public class SaleManager: IBaseManager<Sale>
     {
         private readonly ApplicationDbContext db;
 

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace APEAM.Logic
 {
-    public class ProductManager
+    public class ProductManager : IBaseManager<Product>
     {
         private readonly ApplicationDbContext db;
 

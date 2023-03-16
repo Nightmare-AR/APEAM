@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace APEAM.Helpers
 {
-    public class ReturnArgs
+    public sealed class ReturnArgs
     {
         /// <summary>
         /// Obtiene true si se ejecuto con exito y false si no

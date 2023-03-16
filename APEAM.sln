@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APEAM.Logic", "APEAM.Logic\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APEAM.Helpers", "APEAM.Helpers\APEAM.Helpers.csproj", "{0CA43A50-F986-4A25-A8F3-6B22647BD3BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APEAM.Test", "APEAM.Test\APEAM.Test.csproj", "{8B56673D-844B-4711-B04B-6887B44B5073}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0CA43A50-F986-4A25-A8F3-6B22647BD3BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CA43A50-F986-4A25-A8F3-6B22647BD3BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CA43A50-F986-4A25-A8F3-6B22647BD3BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B56673D-844B-4711-B04B-6887B44B5073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B56673D-844B-4711-B04B-6887B44B5073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B56673D-844B-4711-B04B-6887B44B5073}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B56673D-844B-4711-B04B-6887B44B5073}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

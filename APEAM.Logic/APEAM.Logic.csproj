@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomerManager.cs" />
+    <Compile Include="IBaseManager.cs" />
     <Compile Include="ItemListManager.cs" />
     <Compile Include="ProductManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
